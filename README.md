@@ -23,6 +23,75 @@ reproduce it on their systems.
 
 This is work in progress. 
 
+Important integration tests
+===============
+
+The below tests are being used in [Jenkins/Smashbox Integration Dashboard ](https://jenkins.owncloud.org/view/smashbox/)
+
+[BASH script with all below tests](integration_test_cmds.sh)
+
+**Note: Please refer to sections `Installation` and `First test runs` for more details. Mentioned below [index] refers to variable in the flag `-t [index]`**
+
+ * [Basic Sync and Conflicts ](lib/test_basicSync.py)
+    - basicSync_filesizeKB from 1kB to 50MB (normal and chunked files sync)
+    - basicSync_rmLocalStateDB removing local database in the test (index 0-3) or not (index 4-7)
+
+ * [Concurrently removing directory while files are being added ](lib/test_concurrentDirRemove.py)
+    - Currently only checks for corrupted files in the outcome (TODO: extend test with expected outcome)
+    - Removing the directory while a large file is chunk-uploaded (index 0)
+    - Removing the directory while lots of smaller files are uploaded (index 1)
+    - Removing the directory before files are uploaded (index 2)
+
+ * [Resharing ](lib/oc-test/test_reshareDir.py)
+    - Share directory with receiver and receiver reshares one of the files with another user
+
+ * [Directory Sharing between users ](lib/oc-test/test_shareDir.py)
+    - Tests various sharing actions between users
+
+ * [Files Sharing between users ](lib/oc-test/test_shareFile.py)
+    - Tests various sharing actions between users
+
+ * [Files Sharing between users and groups ](lib/oc-test/test_shareGroup.py)
+    - Tests various sharing actions between users and groups
+
+ * [Files Sharing by link ](lib/oc-test/test_shareLink.py)
+    - Tests various sharing actions with links
+
+ * [Ensures correct behaviour having different permissions ](lib/oc-test/test_sharePermissions.py)
+    - Tests various sharing actions having share permissions
+
+ * [Ensures correct etag propagation 1](lib/owncloud/test_sharePropagationGroups.py)
+ * [Ensures correct etag propagation 2](lib/owncloud/test_sharePropagationInsideGroups.py)
+    - Tests etag propagation sharing/resharing between groups of users
+
+
+Important performance/integration tests
+===============
+
+[BASH script with all below tests](integration_test_cmds.sh)
+
+**Note: Please refer to sections `Installation` and `First test runs` for more details. Mentioned below [index] refers to variable in the flag `-t [index]`**
+
+ * [Upload/Download of small/big files](lib/test_nplusone.py)
+    - Test should monitor upload/download sync time in each of the scenarious (TODO)
+    - Test (index 0) verifies performance of many small files - 100 files - each 1kB
+    - Test (index 2) verifies performance of few over-chunking-size files of total size 60MB
+    - Test (index 3) verifies performance of 1 big over-chunking-size file of total size 60MB
+
+ * [Upload/Download to/from shared folder](lib/oc-test/test_uploadFiles.py)
+    - Test should monitor upload/download sync time (TODO)
+    - Test (index 0) verifies performance of full upload/download sync for folder which has been shared with the user
+
+ * TODO: Shared Mount Performance
+    - Test should monitor number of server DB queries in each of the scenario
+    - Test is initialized with users having incoming and outgoing shared files/directories of each type
+    - PROPFIND on root folder - initialize mount points (initMount is done only on 1st propfind on received shares)
+    - PROPFIND on root folder with initialized content and mount points
+    - PUT to non-shared folder
+    - PUT to shared folder
+    - GET to non-shared folder
+    - GET to shared folder
+
 Project tree
 ============
 
@@ -97,7 +166,10 @@ Examples:
 
     # basic test
     bin/smash lib/test_basicSync.py
-    
+
+    # basic test, specifying test number as specified in tests' `testsets` array
+    bin/smash -t 0 lib/test_basicSync.py
+
     # run a test with different paremeters
     bin/smash -o nplusone_nfiles=10 lib/test_nplusone.py
     
@@ -105,7 +177,6 @@ Examples:
     bin/smash --quiet lib/test_*.py
 
 You will find main log files in ~/smashdir/log* and all temporary files and detailed logs for each test-case in ~/smashdir/<test-case>
-
 
 Different client/server
 =======================

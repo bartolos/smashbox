@@ -16,7 +16,7 @@ if type(filesize) is type(''):
     filesize = eval(filesize)
 
 testsets = [
-        { 'nplusone_filesize': 1000, 
+        { 'nplusone_filesize': 1000,
           'nplusone_nfiles':100
         },
 
@@ -24,11 +24,11 @@ testsets = [
           'nplusone_nfiles':10
         },
 
-        { 'nplusone_filesize': OWNCLOUD_CHUNK_SIZE(1.3), 
-          'nplusone_nfiles':2
+        { 'nplusone_filesize': OWNCLOUD_CHUNK_SIZE(1.5),
+          'nplusone_nfiles':4
         },
 
-        { 'nplusone_filesize': OWNCLOUD_CHUNK_SIZE(3.5), 
+        { 'nplusone_filesize': OWNCLOUD_CHUNK_SIZE(6),
           'nplusone_nfiles':1
         },
 

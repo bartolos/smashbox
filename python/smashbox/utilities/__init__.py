@@ -50,7 +50,7 @@ def compare_client_version(compare_to, operator):
 def OWNCLOUD_CHUNK_SIZE(factor=1):
     """Calculate file size as a fraction of owncloud client's default chunk size.
     """
-    return int(20*1024*1024*factor) # 20MB as of client 1.7 
+    return int(10*1024*1024*factor) # 10MB as of client 2.3
 
 
 ######## TEST SETUP AND PREPARATION
